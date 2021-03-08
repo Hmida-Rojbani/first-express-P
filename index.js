@@ -2,7 +2,7 @@ const express = require('express');
 const port = process.env.PORT || 3000;
 const app = express();
 
-const students = [
+var students = [
     {id : 1, name : 'Student1'},
     {id : 2, name : 'Student2'},
     {id : 3, name : 'Student3'}
@@ -24,6 +24,8 @@ app.get('/api/students/:id',function (req,res) {
 });
 app.use(express.json());
 app.post('/api/students',(req,res) => {
+    if(!req.body.name || req.body.name.length < 4)
+        return res.status(400).send("Student name must exists with at least 4 charcters");
     let student = {
         id : students.length + 1,
         name: req.body.name
@@ -44,5 +46,13 @@ app.put('/api/students/:id',function (req,res) {
 });
 
 // delete
+
+app.delete('/api/students/:id',function (req,res) {
+    let student = students.find(s => s.id === parseInt(req.params.id));
+    if(!student)
+        return res.status(404).send('Student with this id is not found');
+    students = students.filter(s => s.id !== parseInt(req.params.id));;
+    res.send(student)
+});
 
 app.listen(port, ()=> console.log(`Server on ${port}...`));
