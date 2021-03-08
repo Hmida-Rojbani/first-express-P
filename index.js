@@ -1,5 +1,6 @@
 const express = require('express');
-const port = process.env.PORT || 3000;
+const Joi = require('joi')
+const port = process.env.PORT || 3001;
 const app = express();
 
 var students = [
@@ -23,9 +24,17 @@ app.get('/api/students/:id',function (req,res) {
     res.send(student)
 });
 app.use(express.json());
+
+const student_validation_schema = Joi.object({
+    name : Joi.string().min(4).max(20).required()
+})
+
 app.post('/api/students',(req,res) => {
-    if(!req.body.name || req.body.name.length < 4)
-        return res.status(400).send("Student name must exists with at least 4 charcters");
+    //if(!req.body.name || req.body.name.length < 4)
+    //    return res.status(400).send("Student name must exists with at least 4 charcters");
+    let result = student_validation_schema.validate(req.body);
+    if(result.error)
+        res.status(400).send(result.error.details[0].message)
     let student = {
         id : students.length + 1,
         name: req.body.name

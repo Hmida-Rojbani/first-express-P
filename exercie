@@ -1,0 +1,14 @@
+// api pours les course 
+
+courses_api 
+
+{
+    cle : valeur
+}
+
+{
+    titre
+    author
+    price
+    url
+}
