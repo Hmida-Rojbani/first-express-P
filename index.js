@@ -32,5 +32,17 @@ app.post('/api/students',(req,res) => {
     res.status(201).send(student);
 });
 
-// put an delete
+
+// put 
+
+app.put('/api/students/:id',function (req,res) {
+    let student = students.find(s => s.id === parseInt(req.params.id));
+    if(!student)
+        return res.status(404).send('Student with this id is not found');
+    student.name = req.body.name;
+    res.send(student)
+});
+
+// delete
+
 app.listen(port, ()=> console.log(`Server on ${port}...`));
